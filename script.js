@@ -15,20 +15,14 @@ function getSettings() {
     const difficulty = difficultySelect.value;
 
     if (difficulty === "easy") {
-        return {
-            size: 45
-        };
+        return { size: 45 };
     }
 
     if (difficulty === "normal") {
-        return {
-            size: 30
-        };
+        return { size: 30 };
     }
 
-    return {
-        size: 22
-    };
+    return { size: 22 };
 }
 
 function updateScore() {
@@ -100,7 +94,6 @@ pixel.addEventListener("click", function (event) {
     if (!gameStarted) return;
 
     event.stopPropagation();
-
     score++;
     updateScore();
     movePixel();
