@@ -8,7 +8,6 @@ const timeText = document.getElementById("time");
 
 let score = 0;
 let timeLeft = 60;
-let gameInterval = null;
 let timerInterval = null;
 let gameStarted = false;
 
@@ -17,22 +16,27 @@ function getSettings() {
 
     if (difficulty === "easy") {
         return {
-            size: 45,
-            speed: 1300
+            size: 45
         };
     }
 
     if (difficulty === "normal") {
         return {
-            size: 30,
-            speed: 900
+            size: 30
         };
     }
 
     return {
-        size: 22,
-        speed: 700
+        size: 22
     };
+}
+
+function updateScore() {
+    scoreText.textContent = "Score: " + score;
+}
+
+function updateTime() {
+    timeText.textContent = "Time left: " + timeLeft;
 }
 
 function movePixel() {
@@ -53,24 +57,11 @@ function movePixel() {
     pixel.style.top = randomY + "px";
 }
 
-function updateScore() {
-    scoreText.textContent = "Score: " + score;
-}
-
-function updateTime() {
-    timeText.textContent = "Time left: " + timeLeft;
-}
-
-function stopGameIntervals() {
-    clearInterval(gameInterval);
+function endGame(message) {
     clearInterval(timerInterval);
-}
-
-function endGame() {
-    stopGameIntervals();
-    pixel.style.display = "none";
     gameStarted = false;
-    alert("Game over! Your score: " + score);
+    pixel.style.display = "none";
+    alert(message);
 }
 
 function startGame() {
@@ -81,7 +72,7 @@ function startGame() {
         return;
     }
 
-    stopGameIntervals();
+    clearInterval(timerInterval);
 
     score = 0;
     timeLeft = 60;
@@ -95,33 +86,32 @@ function startGame() {
 
     movePixel();
 
-    const { speed } = getSettings();
-
-    gameInterval = setInterval(() => {
-        movePixel();
-    }, speed);
-
     timerInterval = setInterval(() => {
         timeLeft--;
         updateTime();
 
         if (timeLeft <= 0) {
-            endGame();
+            endGame("Time is over! Your score: " + score);
         }
     }, 1000);
 }
 
-pixel.addEventListener("click", function () {
+pixel.addEventListener("click", function (event) {
     if (!gameStarted) return;
+
+    event.stopPropagation();
 
     score++;
     updateScore();
+    movePixel();
+});
 
-    setTimeout(() => {
-        if (gameStarted) {
-            movePixel();
-        }
-    }, 80);
+gameArea.addEventListener("click", function (event) {
+    if (!gameStarted) return;
+
+    if (event.target !== pixel) {
+        endGame("Game over! You missed the square.");
+    }
 });
 
 startBtn.addEventListener("click", startGame);
