@@ -11,18 +11,12 @@ let timeLeft = 60;
 let timerInterval = null;
 let gameStarted = false;
 
-function getSettings() {
-    const difficulty = difficultySelect.value;
+function getSize() {
+    const diff = difficultySelect.value;
 
-    if (difficulty === "easy") {
-        return { size: 45 };
-    }
-
-    if (difficulty === "normal") {
-        return { size: 30 };
-    }
-
-    return { size: 22 };
+    if (diff === "easy") return 45;
+    if (diff === "normal") return 30;
+    return 22;
 }
 
 function updateScore() {
@@ -34,35 +28,30 @@ function updateTime() {
 }
 
 function movePixel() {
-    const { size } = getSettings();
+    const size = getSize();
 
-    const areaWidth = gameArea.clientWidth;
-    const areaHeight = gameArea.clientHeight;
+    const maxX = gameArea.clientWidth - size;
+    const maxY = gameArea.clientHeight - size;
 
-    const maxX = Math.max(areaWidth - size, 0);
-    const maxY = Math.max(areaHeight - size, 0);
-
-    const randomX = Math.floor(Math.random() * (maxX + 1));
-    const randomY = Math.floor(Math.random() * (maxY + 1));
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
     pixel.style.width = size + "px";
     pixel.style.height = size + "px";
-    pixel.style.left = randomX + "px";
-    pixel.style.top = randomY + "px";
+    pixel.style.left = x + "px";
+    pixel.style.top = y + "px";
 }
 
-function endGame(message) {
+function endGame(text) {
     clearInterval(timerInterval);
     gameStarted = false;
     pixel.style.display = "none";
-    alert(message);
+    alert(text);
 }
 
 function startGame() {
-    const selectedColor = colorSelect.value;
-
-    if (selectedColor === "") {
-        alert("Please choose a color.");
+    if (colorSelect.value === "") {
+        alert("Choose color!");
         return;
     }
 
@@ -75,7 +64,7 @@ function startGame() {
     updateScore();
     updateTime();
 
-    pixel.style.backgroundColor = selectedColor;
+    pixel.style.background = colorSelect.value;
     pixel.style.display = "block";
 
     movePixel();
@@ -85,25 +74,26 @@ function startGame() {
         updateTime();
 
         if (timeLeft <= 0) {
-            endGame("Time is over! Your score: " + score);
+            endGame("Time over! Score: " + score);
         }
     }, 1000);
 }
 
-pixel.addEventListener("click", function (event) {
+pixel.addEventListener("click", (e) => {
     if (!gameStarted) return;
 
-    event.stopPropagation();
+    e.stopPropagation();
+
     score++;
     updateScore();
     movePixel();
 });
 
-gameArea.addEventListener("click", function (event) {
+gameArea.addEventListener("click", (e) => {
     if (!gameStarted) return;
 
-    if (event.target !== pixel) {
-        endGame("Game over! You missed the square.");
+    if (e.target !== pixel) {
+        endGame("You missed! Game over.");
     }
 });
 
