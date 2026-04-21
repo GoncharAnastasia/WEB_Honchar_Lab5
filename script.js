@@ -11,6 +11,9 @@ let timeLeft = 60;
 let timerInterval = null;
 let gameStarted = false;
 
+// рекорд з памʼяті браузера
+let bestScore = localStorage.getItem("bestScore") || 0;
+
 function getSize() {
     const diff = difficultySelect.value;
 
@@ -46,7 +49,18 @@ function endGame(text) {
     clearInterval(timerInterval);
     gameStarted = false;
     pixel.style.display = "none";
-    alert(text);
+
+    // оновлення рекорду
+    if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("bestScore", bestScore);
+    }
+
+    alert(
+        text +
+        "\nYour score: " + score +
+        "\nBest score: " + bestScore
+    );
 }
 
 function startGame() {
@@ -74,7 +88,7 @@ function startGame() {
         updateTime();
 
         if (timeLeft <= 0) {
-            endGame("Time over! Score: " + score);
+            endGame("Time over!");
         }
     }, 1000);
 }
@@ -93,7 +107,7 @@ gameArea.addEventListener("click", (e) => {
     if (!gameStarted) return;
 
     if (e.target !== pixel) {
-        endGame("You missed! Game over.");
+        endGame("You missed!");
     }
 });
 
