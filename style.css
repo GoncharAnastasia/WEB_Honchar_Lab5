@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    font-family: "Times New Roman", serif;
+    background-color: white;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px 0 20px;
+    font-size: 18px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 48px;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    flex-wrap: wrap;
+    font-size: 18px;
+}
+
+.controls select,
+.controls button {
+    font-size: 18px;
+    padding: 5px 10px;
+}
+
+#gameArea {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 180px);
+    overflow: hidden;
+    background-color: white;
+}
+
+#pixel {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    display: none;
+    cursor: pointer;
+}
