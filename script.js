@@ -12,32 +12,40 @@ let gameInterval = null;
 let timerInterval = null;
 let gameStarted = false;
 
-function getPixelSize() {
+function getSettings() {
     const difficulty = difficultySelect.value;
 
-    if (difficulty === "easy") return 40;
-    if (difficulty === "normal") return 25;
-    return 15;
-}
+    if (difficulty === "easy") {
+        return {
+            size: 45,
+            speed: 1300
+        };
+    }
 
-function getPixelSpeed() {
-    const difficulty = difficultySelect.value;
+    if (difficulty === "normal") {
+        return {
+            size: 30,
+            speed: 900
+        };
+    }
 
-    if (difficulty === "easy") return 1200;
-    if (difficulty === "normal") return 800;
-    return 500;
+    return {
+        size: 22,
+        speed: 700
+    };
 }
 
 function movePixel() {
+    const { size } = getSettings();
+
     const areaWidth = gameArea.clientWidth;
     const areaHeight = gameArea.clientHeight;
-    const size = getPixelSize();
 
-    const maxX = areaWidth - size;
-    const maxY = areaHeight - size;
+    const maxX = Math.max(areaWidth - size, 0);
+    const maxY = Math.max(areaHeight - size, 0);
 
-    const randomX = Math.floor(Math.random() * maxX);
-    const randomY = Math.floor(Math.random() * maxY);
+    const randomX = Math.floor(Math.random() * (maxX + 1));
+    const randomY = Math.floor(Math.random() * (maxY + 1));
 
     pixel.style.width = size + "px";
     pixel.style.height = size + "px";
@@ -45,9 +53,21 @@ function movePixel() {
     pixel.style.top = randomY + "px";
 }
 
-function endGame() {
+function updateScore() {
+    scoreText.textContent = "Score: " + score;
+}
+
+function updateTime() {
+    timeText.textContent = "Time left: " + timeLeft;
+}
+
+function stopGameIntervals() {
     clearInterval(gameInterval);
     clearInterval(timerInterval);
+}
+
+function endGame() {
+    stopGameIntervals();
     pixel.style.display = "none";
     gameStarted = false;
     alert("Game over! Your score: " + score);
@@ -61,28 +81,29 @@ function startGame() {
         return;
     }
 
-    clearInterval(gameInterval);
-    clearInterval(timerInterval);
+    stopGameIntervals();
 
     score = 0;
     timeLeft = 60;
     gameStarted = true;
 
-    scoreText.textContent = "Score: " + score;
-    timeText.textContent = "Time left: " + timeLeft;
+    updateScore();
+    updateTime();
 
     pixel.style.backgroundColor = selectedColor;
     pixel.style.display = "block";
 
     movePixel();
 
+    const { speed } = getSettings();
+
     gameInterval = setInterval(() => {
         movePixel();
-    }, getPixelSpeed());
+    }, speed);
 
     timerInterval = setInterval(() => {
         timeLeft--;
-        timeText.textContent = "Time left: " + timeLeft;
+        updateTime();
 
         if (timeLeft <= 0) {
             endGame();
@@ -94,8 +115,13 @@ pixel.addEventListener("click", function () {
     if (!gameStarted) return;
 
     score++;
-    scoreText.textContent = "Score: " + score;
-    movePixel();
+    updateScore();
+
+    setTimeout(() => {
+        if (gameStarted) {
+            movePixel();
+        }
+    }, 80);
 });
 
 startBtn.addEventListener("click", startGame);
