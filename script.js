@@ -14,7 +14,9 @@ let timerInterval = null;
 let gameStarted = false;
 let bestScore = Number(localStorage.getItem("bestScore")) || 0;
 
-bestText.textContent = "Best score: " + bestScore;
+if (bestText) {
+    bestText.textContent = "Best score: " + bestScore;
+}
 
 function getSize() {
     const diff = difficultySelect.value;
@@ -32,14 +34,18 @@ function updateTime() {
 }
 
 function updateBest() {
-    bestText.textContent = "Best score: " + bestScore;
+    if (bestText) {
+        bestText.textContent = "Best score: " + bestScore;
+    }
 }
 
 function movePixel() {
     const size = getSize();
+    const maxX = Math.max(gameArea.clientWidth - size, 0);
+    const maxY = Math.max(gameArea.clientHeight - size, 0);
 
-    const x = Math.random() * (gameArea.clientWidth - size);
-    const y = Math.random() * (gameArea.clientHeight - size);
+    const x = Math.floor(Math.random() * (maxX + 1));
+    const y = Math.floor(Math.random() * (maxY + 1));
 
     pixel.style.width = size + "px";
     pixel.style.height = size + "px";
@@ -59,21 +65,28 @@ function endGame(text) {
 
     updateBest();
 
-    messageText.textContent =
-        text + " Your score: " + score + " | Best: " + bestScore;
+    if (messageText) {
+        messageText.textContent = text + " Your score: " + score + " | Best score: " + bestScore;
+    }
 }
 
 function startGame() {
     if (colorSelect.value === "") {
-        messageText.textContent = "Choose color!";
+        if (messageText) {
+            messageText.textContent = "Choose color!";
+        }
         return;
     }
+
+    clearInterval(timerInterval);
 
     score = 0;
     timeLeft = 60;
     gameStarted = true;
 
-    messageText.textContent = "";
+    if (messageText) {
+        messageText.textContent = "";
+    }
 
     updateScore();
     updateTime();
@@ -97,7 +110,6 @@ pixel.addEventListener("click", (e) => {
     if (!gameStarted) return;
 
     e.stopPropagation();
-
     score++;
     updateScore();
     movePixel();
