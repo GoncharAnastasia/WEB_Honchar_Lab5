@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="top-bar">
         <p id="score">Score: 0</p>
         <p id="time">Time left: 60</p>
@@ -15,22 +16,21 @@
     <h1>Pixel Hunt</h1>
 
     <div class="controls">
-        <label for="difficulty">Choose difficulty:</label>
+        <label>Difficulty:</label>
         <select id="difficulty">
             <option value="easy">Easy</option>
             <option value="normal" selected>Normal</option>
             <option value="hard">Hard</option>
         </select>
 
-        <label for="color">Choose color:</label>
+        <label>Color:</label>
         <select id="color">
-            <option value="">--Please choose an option--</option>
+            <option value="">Choose</option>
             <option value="red">Red</option>
             <option value="green">Green</option>
             <option value="blue">Blue</option>
             <option value="purple">Purple</option>
             <option value="orange">Orange</option>
-            <option value="black">Black</option>
         </select>
 
         <button id="startBtn">Start</button>
@@ -40,6 +40,8 @@
         <div id="pixel"></div>
     </div>
 
-    <script src="script.js"></script>
+   
+    <script src="script.js?v=2"></script>
+
 </body>
 </html>
