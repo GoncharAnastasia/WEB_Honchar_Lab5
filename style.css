@@ -9,6 +9,8 @@ body {
     justify-content: space-between;
     padding: 10px 20px;
     font-size: 18px;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 h1 {
@@ -31,10 +33,18 @@ h1 {
     font-size: 16px;
 }
 
+#message {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    min-height: 35px;
+    margin-bottom: 10px;
+}
+
 #gameArea {
     position: relative;
     width: 100%;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 230px);
     background: white;
 }
 
