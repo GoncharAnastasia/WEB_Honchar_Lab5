@@ -10,9 +10,7 @@ let score = 0;
 let timeLeft = 60;
 let timerInterval = null;
 let gameStarted = false;
-
-// рекорд з памʼяті браузера
-let bestScore = localStorage.getItem("bestScore") || 0;
+let bestScore = Number(localStorage.getItem("bestScore")) || 0;
 
 function getSize() {
     const diff = difficultySelect.value;
@@ -33,11 +31,11 @@ function updateTime() {
 function movePixel() {
     const size = getSize();
 
-    const maxX = gameArea.clientWidth - size;
-    const maxY = gameArea.clientHeight - size;
+    const maxX = Math.max(gameArea.clientWidth - size, 0);
+    const maxY = Math.max(gameArea.clientHeight - size, 0);
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const x = Math.floor(Math.random() * (maxX + 1));
+    const y = Math.floor(Math.random() * (maxY + 1));
 
     pixel.style.width = size + "px";
     pixel.style.height = size + "px";
@@ -50,17 +48,12 @@ function endGame(text) {
     gameStarted = false;
     pixel.style.display = "none";
 
-    // оновлення рекорду
     if (score > bestScore) {
         bestScore = score;
         localStorage.setItem("bestScore", bestScore);
     }
 
-    alert(
-        text +
-        "\nYour score: " + score +
-        "\nBest score: " + bestScore
-    );
+    alert(text + "\nYour score: " + score + "\nBest score: " + bestScore);
 }
 
 function startGame() {
@@ -97,7 +90,6 @@ pixel.addEventListener("click", (e) => {
     if (!gameStarted) return;
 
     e.stopPropagation();
-
     score++;
     updateScore();
     movePixel();
