@@ -5,12 +5,16 @@ const pixel = document.getElementById("pixel");
 const gameArea = document.getElementById("gameArea");
 const scoreText = document.getElementById("score");
 const timeText = document.getElementById("time");
+const bestText = document.getElementById("best");
+const messageText = document.getElementById("message");
 
 let score = 0;
 let timeLeft = 60;
 let timerInterval = null;
 let gameStarted = false;
 let bestScore = Number(localStorage.getItem("bestScore")) || 0;
+
+bestText.textContent = "Best score: " + bestScore;
 
 function getSize() {
     const diff = difficultySelect.value;
@@ -26,6 +30,10 @@ function updateScore() {
 
 function updateTime() {
     timeText.textContent = "Time left: " + timeLeft;
+}
+
+function updateBest() {
+    bestText.textContent = "Best score: " + bestScore;
 }
 
 function movePixel() {
@@ -53,12 +61,13 @@ function endGame(text) {
         localStorage.setItem("bestScore", bestScore);
     }
 
-    alert(text + "\nYour score: " + score + "\nBest score: " + bestScore);
+    updateBest();
+    messageText.textContent = text + " Your score: " + score + ". Best score: " + bestScore + ".";
 }
 
 function startGame() {
     if (colorSelect.value === "") {
-        alert("Choose color!");
+        messageText.textContent = "Choose color first.";
         return;
     }
 
@@ -68,6 +77,7 @@ function startGame() {
     timeLeft = 60;
     gameStarted = true;
 
+    messageText.textContent = "";
     updateScore();
     updateTime();
 
